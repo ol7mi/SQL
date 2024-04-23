@@ -25,6 +25,7 @@ insert into testB values('C');
 select * from testA;
 select * from testB;
 
+
 -- nuion : 합집합 - 중복을 허용하지 않음
 -- 중복 데이터는 제거됨 
 SELECT * from TESTB
@@ -47,7 +48,6 @@ minus
 select * from TESTC;
 
 
-
 -- Sub Query (대량 데이터에는 X)
 -- 꼭 () 소괄호 안에다가 작성한다
 -- 하나의 SQL 문 안에 포함된 다른 SQL 문
@@ -62,14 +62,14 @@ SELECT emp_name
 from EMPLOYEE
 where emp_id=(select manager_id from employee where emp_name='전지연');
 -- 서브쿼리의 종류 (서브쿼리가 반환하는 값의 형태에 따라 분류된다)
--- 단일행 단일열 서브쿼리 : 반환하는 값이 단 1개의 데이터일 때 
--- 다중행 단일열 서브쿼리 : 반환하는 값이 여러 행의 데이터일 때
--- 단일행 단중열 서브쿼리 : 반환하는 값이 단일행이지만 여러 열로 구성되어 있을 때
--- 다중행 단중열 서브쿼리 : 반환하는 값이 테이블 구조일 때 
+-- 단일행 단일열 서브 쿼리 : 반환하는 값이 단 1개의 데이터일 때 
+-- 다중행 단일열 서브 쿼리 : 반환하는 값이 여러 행의 데이터일 때
+-- 단일행 단중열 서브 쿼리 : 반환하는 값이 단일행이지만 여러 열로 구성되어 있을 때
+-- 다중행 단중열 서브 쿼리 : 반환하는 값이 테이블 구조일 때 
 
 -- 전직원의 평균 급여를 구하는 쿼리 
 -- 반환된 값을 바탕으로 직원중 1번에서 구한 평균 급여값보다 급여가 높은 사람 조회
-SELECT avg(salary)
+SELECT avg(salar)
 from EMPLOYEE;
 
 SELECT *
@@ -224,10 +224,6 @@ order by 2;
 SELECT min(sal_level),job_code
 from EMPLOYEE 
 group by job_code;
-
-
-
-
 
 -- Inline View (from 절에서 subquery 를 사용) -- from 절에서 서브쿼리를 사용하여 나온 결과에 대해 select 쿼리를 적용하는 문법 
 -- SELECT * from (subquery) when ;
