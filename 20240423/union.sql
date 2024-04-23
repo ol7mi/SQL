@@ -230,7 +230,7 @@ group by job_code;
 
 
 -- Inline View (from 절에서 subquery 를 사용) -- from 절에서 서브쿼리를 사용하여 나온 결과에 대해 select 쿼리를 적용하는 문법 
---SELECT * from (subquery) when ;
+-- SELECT * from (subquery) when ;
 select emp_name, emp_no 
 from (SELECT * from EMPLOYEE) ;
 
@@ -249,10 +249,14 @@ SELECT
     e.emp_name 사원,
     (select emp_name b from EMPLOYEE where e.manager_id = emp_id) 매니저 
 from EMPLOYEE e;
---------------------Sub Query 끝 
+--Sub Query 끝--
+
+
+
+
 
 -- 랭킹 함수 (순위를 정해준다)
---rank() over(어떤 기준?) 공동이면 다음 순위를 뺀다....
+-- rank() over(어떤 기준?) 공동이면 다음 순위를 뺀다....
 select emp_name, salary, rank() over(order by salary desc) from employee;
 -- dense 밀집시켜라, dense_rank() over() 공동순위
 select emp_name, salary, dense_rank() over(order by salary desc) from employee;
