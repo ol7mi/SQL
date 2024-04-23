@@ -100,24 +100,14 @@ where
 
 -- D1, D2 부서에서 근무하는 사원중에 기본 급여가 D5 부서의 급여 평균보다 높은 사람들의 
 -- 사원명 부서코드 부서명 급여 
-select dept_code 부서코드, emp_name 사원명 , (SELECT dept_title from DEPARTMENT where dept_id = dept_code) , salary 급여
-from EMPLOYEE e join DEPARTMENT d on d.dept_id = e.dept_code
-where 
-    dept_code in ('D1','D2')
-    and 
-    salary > (
-        SELECT avg(salary) from EMPLOYEE where dept_code in ('D5'));
+select emp_name, nvl(dept_code,'미정'), nvl((select dept_title from department d where e.dept_code = d.dept_id),'미정')
+from EMPLOYEE e
+where dept_code in ('D1','D2') and salary > (select avg(salary) from EMPLOYEE where dept_code in ('D5'));
 
-select emp_name 사원명, dept_code 부서코드, (SELECT dept_title from DEPARTMENT where dept_id = dept_code ) 부서명, salary 급여 
-from  EMPLOYEE
-where 
-    dept_code in ('D1','D2') 
-    and salary > (select avg(salary) from employee where dept_code in ('D5'))
-;
+select salary
+from EMPLOYEE
+where dept_code in ('D5');
 
-
-SELECT * from EMPLOYEE ;
-SELECT * from DEPARTMENT ;
 SELECT * from job ;
 -- 다중행 서브쿼리 : 서브쿼리가 반환하는 값이 다중행인 경우 
 -- 송종기 또는 박나라 직원의 부서코드를 출력하세요 
@@ -168,41 +158,31 @@ and emp_name != '이태림';
 
 -- 다중행 다중열 서브쿼리 
 -- 생일이 8월 8일인 사원들과 같은 부서코드,직급코드를 가진 사원들의 사원명,생일,부서코드,부서명 
-SELECT  
-     emp_name 사원명,
-     substr(emp_no,3,4) 생일,
-     dept_code 부서코드,
-     dept_title 부서명
-from EMPLOYEE e join DEPARTMENT d on e.dept_code = d.dept_id
-where 
-    (dept_code, job_code) 
-    in 
-    (SELECT dept_code, job_code from EMPLOYEE where substr(emp_no,3,4) = 0808 );
+select 
+    emp_name 사원명, 
+    substr(emp_no,3,4) 생일, 
+    dept_code 부서코드, job_code,
+    (select dept_title from department d where e.dept_code = d.dept_id) 부서명
+from employee e
+where (dept_code, job_code) in (select dept_code, job_code from employee where substr(emp_no,3,4) = 0808);
 
-
-SELECT dept_code, job_code
-from EMPLOYEE 
-where substr(emp_no,3,4) = 0808 ;
-
+--생일이 8월 8일인 사원들과 같은 부서코드,직급코드
+-- SELECT dept_code, job_code
+-- from EMPLOYEE 
+-- where substr(emp_no,3,4) = 0808 ;
 
 
 
 -- 부서별 급여를 제일 많이 받는 직원 
 -- 부서코드, 부서명, 직원의 사원명, 급여
-SELECT 
+select 
     nvl(dept_code,'미정') 부서코드, 
-    nvl(dept_title,'미정') 부서명, 
+    nvl((select dept_title from department d where d.dept_id = e.dept_code),'미정') 부서명, 
     emp_name 사원명, 
     salary 급여
-from EMPLOYEE e left join DEPARTMENT d on e.dept_code = d.dept_id
-where 
-        (nvl(dept_code,'미정'), salary) in 
-(SELECT  nvl(dept_code,'미정'),max(salary) from EMPLOYEE group by dept_code)
-order by 1,2;
+from employee e
+where (nvl(dept_code,'미정'),salary) in (select nvl(dept_code,'미정') ,max(salary) from employee group by dept_code);
 
-SELECT max(salary) , nvl(dept_code,'미정')
-from EMPLOYEE
-group by dept_code;
 
 -- 각 직급마다 급여등급이 가장 높은 직원의 이름, 직급코드, 직급명, 급여, 급여등급 출력 
 SELECT
@@ -259,15 +239,7 @@ select emp_name, salary, dense_rank() over(order by salary desc) from employee;
 -- 공동순위가 싫으면? row_number() over()
 select emp_name, salary, row_number() over(order by salary desc) from employee;
 
-select *
-from employee;
 
--- 5위 부터 10위까지 
 select *
-from (SELECT emp_name, row_number() over(order by salary desc) e from EMPLOYEE) 
-where e BETWEEN 5 and 10;
-
-select * 
 from (select emp_name, salary, row_number() over(order by salary desc) r from employee)
-where r = 3;
-
+where r between 5 and 10;
