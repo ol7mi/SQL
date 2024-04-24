@@ -164,7 +164,11 @@ select
     dept_code 부서코드, job_code,
     (select dept_title from department d where e.dept_code = d.dept_id) 부서명
 from employee e
-where (dept_code, job_code) in (select dept_code, job_code from employee where substr(emp_no,3,4) = 0808);
+where 
+    (dept_code, job_code) 
+in  (select dept_code, job_code 
+     from employee 
+     where substr(emp_no,3,4) = 0808);
 
 --생일이 8월 8일인 사원들과 같은 부서코드,직급코드
 -- SELECT dept_code, job_code
